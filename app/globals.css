@@ -115,11 +115,66 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+@layer components {
+  .auth-layout {
+    @apply flex flex-col justify-center items-center min-h-screen gap-6 p-6 md:p-10 bg-slate-50 dark:bg-slate-900;
+  }
+
+  .card-tag {
+    @apply min-w-xl rounded-2xl shadow-lg flex flex-col border border-slate-200 dark:border-slate-700;
+  }
+
+  .features {
+    @apply py-20 lg:py-20 from-slate-100 to-white bg-gradient-to-r dark:to-amber-900/20 dark:from-slate-900;
+  }
+
+  .cta {
+    @apply py-20 lg:py-24 bg-white dark:bg-slate-800/50;
+  }
+
+  .cta-link {
+    @apply inline-block px-8 py-4 text-lg font-bold text-black bg-primary hover:bg-primary rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300;
+  }
+
+  .dashboard {
+    @apply min-h-screen font-sans text-slate-800 dark:text-black bg-slate-50 dark:bg-slate-900 top-8;
+  }
+}
+
+.hide-scrollbar::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+  border-radius: 0px;
+}
+
+.hide-scrollbar::-webkit-scrollbar-track{
+  background: transparent
+}
+
+.hide-scrollbar::-webkit-scrollbar-thumb{
+  background: transparent;
+  border-radius: 0px
+}
+
+.hide-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled){
+    cursor:pointer;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
+
+
