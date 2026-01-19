@@ -86,7 +86,7 @@ const AuthForm = ({ loading, setLoading, }: Props) => {
                                return
                         }
 
-                        await 
+                         
                         toast.success("Signed in successfully!");
 
                         setLoading(false)
