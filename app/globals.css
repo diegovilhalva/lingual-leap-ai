@@ -121,11 +121,12 @@
   }
 
   .card-tag {
-    @apply min-w-xl rounded-2xl shadow-lg flex flex-col border border-slate-200 dark:border-slate-700;
+    @apply w-full max-w-sm md:max-w-md lg:max-w-lg rounded-2xl shadow-lg flex flex-col border border-slate-200 dark:border-slate-700;
   }
 
+
   .features {
-    @apply py-20 lg:py-20 from-slate-100 to-white bg-gradient-to-r dark:to-amber-900/20 dark:from-slate-900;
+    @apply py-20 lg:py-20 from-slate-100 to-white bg-linear-to-r dark:to-amber-900/20 dark:from-slate-900;
   }
 
   .cta {
@@ -141,17 +142,17 @@
   }
 }
 
-.hide-scrollbar::-webkit-scrollbar{
+.hide-scrollbar::-webkit-scrollbar {
   width: 0;
   height: 0;
   border-radius: 0px;
 }
 
-.hide-scrollbar::-webkit-scrollbar-track{
+.hide-scrollbar::-webkit-scrollbar-track {
   background: transparent
 }
 
-.hide-scrollbar::-webkit-scrollbar-thumb{
+.hide-scrollbar::-webkit-scrollbar-thumb {
   background: transparent;
   border-radius: 0px
 }
@@ -161,9 +162,10 @@
 }
 
 @layer base {
+
   button:not(:disabled),
-  [role="button"]:not(:disabled){
-    cursor:pointer;
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }
 
@@ -176,5 +178,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-
