@@ -12,7 +12,7 @@ import {
     FieldTitle,
 } from "@/components/ui/field"
 
-import { z, } from "zod"
+import { email, z, } from "zod"
 import { usePathname, useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { useState } from "react"
@@ -21,6 +21,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from "../input"
 import { Button } from "../button"
 import { Loader2 } from "lucide-react"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
+import { auth } from "@/services/firebase"
+import { saveUserToDatabase } from "@/services/auth/saveUser"
 
 
 
@@ -62,15 +65,54 @@ const AuthForm = ({ loading, setLoading, }: Props) => {
         }
     })
 
-    const onSubmit = async(data: z.infer<typeof formSchema>) => {
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             setLoading(true)
-            await new Promise(res => setTimeout(res, 1500)) // simula request
-            toast.success(isSignUp ? "Account created successfully!" : "Logged in successfully!")
+            if (isSignUp) {
+                createUserWithEmailAndPassword(auth, data.email, data.password)
+                    .then(async (userCredential) => {
+                        const user = userCredential.user
+                        const res = await saveUserToDatabase({
+                            id: user.uid,
+                            email: user.email!,
+                            image: user.photoURL || "",
+                            name: user.displayName || user.email!.split("@")[0],
+                            isPro: false,
+                        })
+
+                        if (!res.success) {
+                               toast.error("Failed to save user to database.")
+                               setLoading(false)
+                               return
+                        }
+
+                        await 
+                        toast.success("Signed in successfully!");
+
+                        setLoading(false)
+                    })
+                    .catch((error) => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        toast.error(`Error ${errorCode}: ${errorMessage}`);
+                        setLoading(false)
+                    })
+            } else {
+                signInWithEmailAndPassword(auth, data.email, data.password).then(async (userCredential) => {
+                    const user = userCredential.user
+                    toast.success("Signed in successfully!");
+                    console.log(user)
+                    setLoading(false)
+                })
+                    .catch((error) => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        toast.error(`Error ${errorCode}: ${errorMessage}`);
+                        setLoading(false)
+                    })
+            }
         } catch (error) {
             toast.error("Something went wrong")
-        } finally {
-            setLoading(false)
         }
     }
 
@@ -119,7 +161,7 @@ const AuthForm = ({ loading, setLoading, }: Props) => {
                     />
                 )}
                 <Button type="submit" disabled={loading}>
-                     {loading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                    {loading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                     {isSignUp ? "Create Account" : "Login to your account"}
                 </Button>
             </FieldGroup>
