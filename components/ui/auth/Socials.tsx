@@ -1,10 +1,12 @@
+"use client"
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "../button";
 import { GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { saveUserToDatabase } from "@/services/auth/saveUser";
 import { auth } from "@/services/firebase";
 import { toast } from "sonner";
+import { storeUser } from "@/services/auth/storeUser";
 
 type Props = {
     loading: boolean;
@@ -14,6 +16,7 @@ type Props = {
 const Socials = ({ loading, setLoading }: Props) => {
     const pathName = usePathname()
     const isSignIn = pathName === "/sign-in"
+     const router = useRouter()
     const githubProvider = new GithubAuthProvider();
     const googleProvider = new GoogleAuthProvider();
 
@@ -35,8 +38,17 @@ const Socials = ({ loading, setLoading }: Props) => {
                     setLoading(false)
                     return
                 }
-                toast.success("Signed in successfully!");
 
+                await storeUser({
+                    id: auth.currentUser!.uid,
+                    name:
+                        auth.currentUser!.displayName ||
+                        auth.currentUser!.email!.split("@")[0],
+                    email: auth.currentUser!.email!,
+                    image: auth.currentUser!.photoURL || "",
+                });
+                toast.success("Signed in successfully!");
+                 router.push("/dashboard");
                 setLoading(false)
 
             })
