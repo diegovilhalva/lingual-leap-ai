@@ -67,7 +67,7 @@ const Header = ({ user }: Props) => {
                         </h1>
                     </Link>
                     <div className="flex items-center gap-2">
-                        {user && (
+                        {user ? (
                             <>
                                 {/* DESKTOP */}
                                 <div className="hidden sm:flex items-center">
@@ -153,7 +153,7 @@ const Header = ({ user }: Props) => {
                                     </DropdownMenu>
                                 </div>
                             </>
-                        )}
+                        ):(<div className="flex items-center gap-2"> <Link href="/sign-in"> <Button size="sm">Sign In</Button> </Link> <Link href="/sign-up"> <Button size="sm" className="hidden sm:inline-flex"> Sign Up </Button> </Link> </div>)}
 
                         <div className="hidden sm:block">
                             <ThemeToggler />
