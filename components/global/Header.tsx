@@ -1,5 +1,15 @@
 "use client"
 
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
+
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -11,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { clearUserSession } from "@/services/auth/storeUser";
 import { auth } from "@/services/firebase";
+import { ThemeToggler } from "./ThemeToggler";
 
 type Props = {
     user: User | null
@@ -57,17 +68,20 @@ const Header = ({ user }: Props) => {
                     </Link>
                     <div className="flex items-center gap-2">
                         {user ? (
-                            <div className="flex items-center">
-                                {user.id && user.image ? (
-                                    <img
-                                        src={user.image}
-                                        className={cn(
-                                            "rounded-full size-8 mr-2",
-                                            user.isPro && "border-4 p-0.5 size-9 border-primary"
-                                        )}
-                                        alt=""
-                                    />
-                                ) : (
+                            <>
+                                {/* DESKTOP */}
+                                <div className="hidden sm:flex items-center">
+                                    {user.image ? (
+                                        <img
+                                            src={user.image}
+                                            className={cn(
+                                                "rounded-full size-8 mr-2",
+                                                user.isPro && "border-4 p-0.5 size-9 border-primary"
+                                            )}
+                                            alt=""
+                                        />
+                                    ) : null}
+
                                     <span className="text-sm text-slate-700 dark:text-slate-300 mr-2 capitalize">
                                         Welcome,{" "}
                                         <span
@@ -78,26 +92,73 @@ const Header = ({ user }: Props) => {
                                             {user.name}
                                         </span>
                                     </span>
-                                )}
-                                {user.isPro && (
-                                    <Button className="w-fit mr-2">
-                                        Your Portal
+
+                                    {user.isPro && (
+                                        <Button className="w-fit mr-2">Your Portal</Button>
+                                    )}
+
+                                    <Button className="w-fit" onClick={logout}>
+                                        Logout
                                     </Button>
-                                )}
-                                <Button className="w-fit" onClick={logout}>
-                                    Logout
-                                </Button>
-                            </div>
-                        ) : (
-                            <div className="space-x-2">
-                                <Link href={"/sign-in"}>
-                                    <Button className="w-fit">Sign In</Button>
-                                </Link>
-                                <Link href={"/sign-up"}>
-                                    <Button className="w-fit">Sign Up</Button>
-                                </Link>
-                            </div>
-                        )}
+                                </div>
+
+                                {/* MOBILE */}
+                                <div className="sm:hidden">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <button>
+                                                <img
+                                                    src={user.image || "/avatar-placeholder.png"}
+                                                    className={cn(
+                                                        "rounded-full size-8",
+                                                        user.isPro && "border-2 border-primary"
+                                                    )}
+                                                    alt="User avatar"
+                                                />
+                                            </button>
+                                        </DropdownMenuTrigger>
+
+                                        <DropdownMenuContent align="end" className="w-56">
+                                            <DropdownMenuLabel className="truncate">
+                                                {user.name}
+                                                <p className="text-xs font-normal text-muted-foreground truncate">
+                                                    {user.email}
+                                                </p>
+                                            </DropdownMenuLabel>
+
+                                            <DropdownMenuSeparator />
+
+                                            {user.isPro && (
+                                                <DropdownMenuItem asChild>
+                                                    <Link href="/portal">Your Portal</Link>
+                                                </DropdownMenuItem>
+                                            )}
+
+                                            <DropdownMenuItem asChild>
+                                                <div className="flex items-center justify-between w-full">
+                                                    Theme
+                                                    <ThemeToggler />
+                                                </div>
+                                            </DropdownMenuItem>
+
+                                            <DropdownMenuSeparator />
+
+                                            <DropdownMenuItem
+                                                onClick={logout}
+                                                className="text-red-600 focus:text-red-600"
+                                            >
+                                                Logout
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+                            </>
+                        ):(<div className="flex items-center gap-2"> <Link href="/sign-in"> <Button size="sm">Sign In</Button> </Link> <Link href="/sign-up"> <Button size="sm" className="hidden sm:inline-flex"> Sign Up </Button> </Link> </div>)}
+
+                        <div className="hidden sm:block">
+                            <ThemeToggler />
+                        </div>
+
                     </div>
                 </div>
             </div>
