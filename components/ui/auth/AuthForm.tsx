@@ -24,6 +24,7 @@ import { Loader2 } from "lucide-react"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 import { auth } from "@/services/firebase"
 import { saveUserToDatabase } from "@/services/auth/saveUser"
+import { storeUser } from "@/services/auth/storeUser"
 
 
 
@@ -37,6 +38,7 @@ type Props = {
 const AuthForm = ({ loading, setLoading, }: Props) => {
     const pathName = usePathname()
     const isSignUp = pathName === "/sign-up"
+    const router = useRouter()
 
     const formSchema = z.object({
         email: z.email("Email must be entered"),
@@ -81,14 +83,19 @@ const AuthForm = ({ loading, setLoading, }: Props) => {
                         })
 
                         if (!res.success) {
-                               toast.error("Failed to save user to database.")
-                               setLoading(false)
-                               return
+                            toast.error("Failed to save user to database.")
+                            setLoading(false)
+                            return
                         }
 
-                         
+                        await storeUser({
+                            id: user.uid,
+                            email: user.email!,
+                            image: user.photoURL || "",
+                            name: user.displayName || user.email!.split("@")[0],
+                        });
                         toast.success("Signed in successfully!");
-
+                        router.push("/dashboard")
                         setLoading(false)
                     })
                     .catch((error) => {
@@ -100,8 +107,14 @@ const AuthForm = ({ loading, setLoading, }: Props) => {
             } else {
                 signInWithEmailAndPassword(auth, data.email, data.password).then(async (userCredential) => {
                     const user = userCredential.user
+                    await storeUser({
+                        id: user.uid,
+                        email: user.email!,
+                        image: user.photoURL || "",
+                        name: user.displayName || user.email!.split("@")[0],
+                    });
                     toast.success("Signed in successfully!");
-                    console.log(user)
+                    router.push("/dashboard")
                     setLoading(false)
                 })
                     .catch((error) => {
