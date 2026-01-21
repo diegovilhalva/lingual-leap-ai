@@ -175,7 +175,7 @@
 
 
   .features {
-    @apply py-20 lg:py-20 from-slate-100 to-white bg-linear-to-r dark:to-amber-900/20 dark:from-slate-900;
+    @apply py-20 lg:py-24 from-slate-100 to-white bg-linear-to-r dark:to-amber-900/20 dark:from-slate-900;
   }
 
   .cta {
