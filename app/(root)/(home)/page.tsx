@@ -1,3 +1,4 @@
+import Features from "@/components/home/Features";
 import Hero from "@/components/home/Hero";
 import { getUserSession } from "@/services/auth/storeUser";
 import { getUser } from "@/services/getUser";
@@ -17,6 +18,7 @@ export default async function Home() {
   return (
     <div>
       <Hero user={user?.id ? fullUser : null} />
+      <Features />
     </div>
   );
 }
