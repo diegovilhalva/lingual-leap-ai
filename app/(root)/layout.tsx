@@ -10,7 +10,7 @@ type Props = {
 const RootLayout = async ({ children }: Props) => {
     const user = await getUserSession()
 
-    console.log("User in RootLayout", user)
+   
     const firestoreUser = await getUser({ userId: user?.id })
     const fullUser = {
         id: user?.id!,
@@ -22,7 +22,7 @@ const RootLayout = async ({ children }: Props) => {
     return (
         <div>
             <Header user={user?.id ? fullUser : null} />
-            <div className="h-[5000px]">
+            <div>
                 {children}
             </div>
         </div>
