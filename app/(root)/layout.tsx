@@ -1,6 +1,7 @@
 import Header from "@/components/global/Header"
 import { getUserSession } from "@/services/auth/storeUser"
 import { getUser } from "@/services/getUser"
+import { CheckUserSubscription } from "@/services/polar"
 import { ReactNode } from "react"
 
 type Props = {
@@ -10,7 +11,10 @@ type Props = {
 const RootLayout = async ({ children }: Props) => {
     const user = await getUserSession()
 
-   
+    if (user) {
+        await CheckUserSubscription({ userId: user.id });
+    }
+
     const firestoreUser = await getUser({ userId: user?.id })
     const fullUser = {
         id: user?.id!,
