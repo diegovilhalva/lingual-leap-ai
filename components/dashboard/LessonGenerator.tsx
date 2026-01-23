@@ -10,6 +10,8 @@ import { LANGUAGES, PROFICIENCY_LEVELS } from "@/constants/constants";
 import { Button } from "../ui/button";
 import { LoadingSpinner } from "@/constants/icons/LoadingSpinner";
 import GeneratedLesson from "./GeneratedLesson";
+import { lessongeneratorTrigger } from "@/services/inngestTrigger";
+import { toast } from "sonner";
 
 interface LessonGeneratorProps {
   selectedLanguage: string;
@@ -23,11 +25,11 @@ const LessonGenerator: FC<LessonGeneratorProps> = ({ selectedLanguage, user }) =
   );
   const [lessonPlan, setLessonPlan] = useState<
     | {
-        lessonPlan: LessonPlan;
-        language: string;
-        proficiency: Proficiency;
-        topic: string;
-      }[]
+      lessonPlan: LessonPlan;
+      language: string;
+      proficiency: Proficiency;
+      topic: string;
+    }[]
     | null
   >(null);
 
@@ -36,6 +38,42 @@ const LessonGenerator: FC<LessonGeneratorProps> = ({ selectedLanguage, user }) =
   const language = LANGUAGES.find(
     (language) => language.name === selectedLanguage
   );
+
+  const handleGenerateLesson = async () => {
+    if (!user.isPro && language?.pro) {
+      setError("Select language is only available for PRO members");
+      toast.error("Select language is only available for PRO members");
+      return;
+    }
+
+    if (!topic.trim()) {
+      setError("Please enter a topic.");
+      return;
+    }
+    // console.log("Selected Language:", selectedLanguage);
+    if (!selectedLanguage) {
+      setError("Please select a language.");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null)
+
+    try {
+      await lessongeneratorTrigger({
+        topic,
+        proficiency,
+        selectedLanguage,
+        userId: user.id,
+      });
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex items-center text-xl font-bold text-primary">
@@ -86,8 +124,10 @@ const LessonGenerator: FC<LessonGeneratorProps> = ({ selectedLanguage, user }) =
         </div>
         <Button
           className="w-full"
+          disabled={isLoading}
+          onClick={handleGenerateLesson}
         >
-          Generate Lesson
+         {isLoading ? <LoadingSpinner /> : "Generate Lesson"}
         </Button>
         {error && (
           <div className="text-red-500 text-sm p-3 bg-red-100 dark:bg-red-900/50 rounded-md">
@@ -105,11 +145,11 @@ const LessonGenerator: FC<LessonGeneratorProps> = ({ selectedLanguage, user }) =
             </div>
           )}
           {lessonPlan && lessonPlan.length > 0 && (
-          <GeneratedLesson
-            lesson={lessonPlan}
-            selectedLanguage={selectedLanguage}
-          />
-        )}
+            <GeneratedLesson
+              lesson={lessonPlan}
+              selectedLanguage={selectedLanguage}
+            />
+          )}
         </div>
       </div>
     </div>
