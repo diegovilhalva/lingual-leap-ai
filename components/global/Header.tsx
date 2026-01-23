@@ -22,6 +22,7 @@ import { Button } from "../ui/button";
 import { clearUserSession } from "@/services/auth/storeUser";
 import { auth } from "@/services/firebase";
 import { ThemeToggler } from "./ThemeToggler";
+import { polarPortal } from "@/services/polar";
 
 type Props = {
     user: User | null
@@ -94,7 +95,7 @@ const Header = ({ user }: Props) => {
                                     </span>
 
                                     {user.isPro && (
-                                        <Button className="w-fit mr-2">Your Portal</Button>
+                                        <Button className="w-fit mr-2" onClick={() => polarPortal({ externalCustomerId: user.id! })}>Your Portal</Button>
                                     )}
 
                                     <Button className="w-fit" onClick={logout}>
@@ -129,8 +130,8 @@ const Header = ({ user }: Props) => {
                                             <DropdownMenuSeparator />
 
                                             {user.isPro && (
-                                                <DropdownMenuItem asChild>
-                                                    <Link href="/portal">Your Portal</Link>
+                                                <DropdownMenuItem  onClick={() => polarPortal({ externalCustomerId: user.id! })}>
+                                                  Your Portal
                                                 </DropdownMenuItem>
                                             )}
 
@@ -153,7 +154,7 @@ const Header = ({ user }: Props) => {
                                     </DropdownMenu>
                                 </div>
                             </>
-                        ):(<div className="flex items-center gap-2"> <Link href="/sign-in"> <Button size="sm">Sign In</Button> </Link> <Link href="/sign-up"> <Button size="sm" className="hidden sm:inline-flex"> Sign Up </Button> </Link> </div>)}
+                        ) : (<div className="flex items-center gap-2"> <Link href="/sign-in"> <Button size="sm">Sign In</Button> </Link> <Link href="/sign-up"> <Button size="sm" className="hidden sm:inline-flex"> Sign Up </Button> </Link> </div>)}
 
                         <div className="hidden sm:block">
                             <ThemeToggler />
