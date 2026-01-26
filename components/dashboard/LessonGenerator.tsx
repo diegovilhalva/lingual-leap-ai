@@ -2,7 +2,7 @@
 
 import { GeneratorIcon } from "@/constants/icons/Generator";
 import { LessonPlan, Proficiency, User } from "@/types";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -12,6 +12,8 @@ import { LoadingSpinner } from "@/constants/icons/LoadingSpinner";
 import GeneratedLesson from "./GeneratedLesson";
 import { lessongeneratorTrigger } from "@/services/inngestTrigger";
 import { toast } from "sonner";
+import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { db } from "@/services/firebase";
 
 interface LessonGeneratorProps {
   selectedLanguage: string;
@@ -38,6 +40,28 @@ const LessonGenerator: FC<LessonGeneratorProps> = ({ selectedLanguage, user }) =
   const language = LANGUAGES.find(
     (language) => language.name === selectedLanguage
   );
+   useEffect(() => {
+    const unsub = onSnapshot(
+      query(
+        collection(db, "lessons"),
+        where("language", "==", selectedLanguage),
+        where("userId", "==", user.id),
+        orderBy("createdAt", "desc")
+      ),
+      (snapshot) => {
+        setLessonPlan(
+          snapshot.docs.map((doc) => ({
+            lessonPlan: doc.data().lessonPlan,
+            language: doc.data().language,
+            proficiency: doc.data().proficiency,
+            topic: doc.data().topic,
+          }))
+        );
+      }
+    );
+
+    return () => unsub();
+  }, [selectedLanguage])
 
   const handleGenerateLesson = async () => {
     if (!user.isPro && language?.pro) {
@@ -74,6 +98,7 @@ const LessonGenerator: FC<LessonGeneratorProps> = ({ selectedLanguage, user }) =
       setIsLoading(false);
     }
   }
+  console.log(lessonPlan)
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex items-center text-xl font-bold text-primary">
