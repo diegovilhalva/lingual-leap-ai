@@ -3,7 +3,9 @@ import { LANGUAGES } from "@/constants/constants";
 import { LessonPlan, Proficiency } from "@/types";
 import { FC, ReactNode, useState } from "react";
 import { Button } from "../ui/button";
-import { ChevronsLeft, ChevronsRight, SpeakerIcon } from "lucide-react";
+import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { SpeakerIcon } from "@/constants/icons/SpeakerIcon";
 
 interface GeneratedLessonProps {
     lesson: {
@@ -14,7 +16,6 @@ interface GeneratedLessonProps {
     }[];
     selectedLanguage: string;
 }
-
 const SectionCard: FC<{ title: string; children: ReactNode }> = ({
     title,
     children,
@@ -23,11 +24,13 @@ const SectionCard: FC<{ title: string; children: ReactNode }> = ({
         <h4 className="font-semibold text-lg mb-3 text-primary">{title}</h4>
         {children}
     </div>
+
 );
 
 const GeneratedLesson: FC<GeneratedLessonProps> = ({ lesson, selectedLanguage }) => {
     const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
-    // const { speak, isSpeaking, isSupported } = useTextToSpeech();
+   const { speak, isSpeaking, isSupported } = useTextToSpeech();
+
     const language = LANGUAGES.find(
         (language) => language.name === selectedLanguage
     );
@@ -44,11 +47,20 @@ const GeneratedLesson: FC<GeneratedLessonProps> = ({ lesson, selectedLanguage })
                         Lesson {currentLessonIndex + 1} of {lesson.length}
                     </span>
                     <Button
-                        size={"icon"}>
+                        size={"icon"} onClick={() =>
+                            setCurrentLessonIndex((index) => Math.max(index - 1, 0))
+                        }
+                        disabled={currentLessonIndex === 0}>
                         <ChevronsLeft className="size-6" />
                     </Button>
                     <Button
-                        size={"icon"}>
+                        size={"icon"}
+                        onClick={() =>
+                            setCurrentLessonIndex((index) =>
+                                Math.min(index + 1, lesson.length - 1)
+                            )
+                        }
+                        disabled={currentLessonIndex === lesson.length - 1}>
                         <ChevronsRight className="size-6" />
                     </Button>
                 </div>
@@ -79,13 +91,18 @@ const GeneratedLesson: FC<GeneratedLessonProps> = ({ lesson, selectedLanguage })
                                                 {item.translation}
                                             </span>
                                         </p>
-                                        <SpeakerIcon />
+                                      
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <p className="text-slate-500 dark:text-slate-400 italic pl-2 border-l-2 border-slate-200 dark:border-slate-600 ml-2 grow">
                                             {item.example}
                                         </p>
-                                        <SpeakerIcon />
+                                        {
+                                            isSupported && (
+                                                <SpeakerIcon onClick={() => speak(item.example, language.code)}
+                                                    disabled={isSpeaking} />
+                                            )
+                                        }
                                     </div>
                                 </li>
                             ))}
@@ -105,7 +122,14 @@ const GeneratedLesson: FC<GeneratedLessonProps> = ({ lesson, selectedLanguage })
                                         <p className="text-slate-500 dark:text-slate-400 italic grow">
                                             {item.example}
                                         </p>
-                                        <SpeakerIcon />
+                                        {
+                                            isSupported && (
+
+                                                <SpeakerIcon onClick={() => speak(item.example, language.code)}
+                                                    disabled={isSpeaking} />
+
+                                            )
+                                        }
                                     </div>
                                 </li>
                             ))}
@@ -119,13 +143,18 @@ const GeneratedLesson: FC<GeneratedLessonProps> = ({ lesson, selectedLanguage })
                                         <p className="font-medium text-slate-800 dark:text-slate-100 grow">
                                             {item.sentence}
                                         </p>
-                                        <SpeakerIcon />
+                                        {isSupported && (
+                                            <SpeakerIcon
+                                                onClick={() => speak(item.sentence, language.code)}
+                                                disabled={isSpeaking}
+                                            />
+                                        )}
                                     </div>
                                     <p className="text-slate-500 dark:text-slate-400">
                                         {item.translation}
                                     </p>
                                 </li>
-                                )
+                            )
                             )}
                         </ul>
                     </SectionCard>
