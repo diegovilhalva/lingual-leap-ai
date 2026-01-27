@@ -98,7 +98,7 @@ const LessonGenerator: FC<LessonGeneratorProps> = ({ selectedLanguage, user }) =
       setIsLoading(false);
     }
   }
-  console.log(lessonPlan)
+
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex items-center text-xl font-bold text-primary">
