@@ -28,7 +28,7 @@ export async function translatorTrigger({
 }: translatorParams) {
   try {
     await inngest.send({
-      name: "lingua/translator",
+      name: "lingua/translate",
       data: { sourceLangName, targetLangName, text, userId, selectedLanguage },
     });
   } catch (error) {

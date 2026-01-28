@@ -1,5 +1,6 @@
 import LanguageSelector from "@/components/dashboard/LanguageSelector"
 import LessonGenerator from "@/components/dashboard/LessonGenerator";
+import Translator from "@/components/dashboard/Translator";
 import { getUserSession } from "@/services/auth/storeUser";
 import { getUser } from "@/services/getUser";
 import { redirect } from "next/navigation";
@@ -36,7 +37,7 @@ const DashboardPage = async ({
             />
           </div>
           <div className="bg-white dark:bg-slate-800/50 rounded-2xl p-6 shadow-lg flex flex-col border border-slate-200 dark:border-slate-700">
-            Translator
+            <Translator selectedLanguage={selectedLanguage || "Spanish"} user={currentUser}/>
           </div>
         </div>
       </main>
