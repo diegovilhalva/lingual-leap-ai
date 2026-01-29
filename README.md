@@ -1,36 +1,170 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Lingual Leap AI 🚀
 
-First, run the development server:
+**Lingual Leap AI** is an AI-powered language learning platform that generates personalized lessons and translations using **Google Gemini**, real-time storage with **Firebase**, background jobs via **Inngest**, and modern SaaS billing with **Polar**.
+
+Users can generate custom lesson plans, translate text between languages, listen with text-to-speech, and unlock premium features through a PRO subscription.
+
+🌍 Live Demo: https://lingual-leap-ai.vercel.app  
+📦 GitHub Repo: https://github.com/diegovilhalva/lingual-leap-ai
+
+---
+
+## ✨ Features
+
+- 🤖 AI-generated personalized language lessons (Gemini)
+- 🌐 Real-time AI-powered text translation
+- 🔊 Text-to-Speech pronunciation support
+- 📚 Lesson history & translation history
+- 🔐 Authentication with Firebase (Email, Google, GitHub)
+- 💾 Realtime database with Firestore
+- 🧠 Background jobs & workflows with Inngest
+- 💳 PRO subscriptions & billing via Polar
+- 🎨 Modern UI with Tailwind & shadcn/ui
+- 🌓 Dark mode & theme support
+- ⚡ Fast Next.js 16 App Router architecture
+
+---
+
+## 🧱 Tech Stack
+
+**Frontend**
+- Next.js 16
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Framer Motion
+
+**Backend / Services**
+- Firebase (Auth, Firestore)
+- Google Gemini AI
+- Inngest (Background Jobs & Event-driven workflows)
+- Polar (Payments & Subscriptions)
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env.local` file and configure the following:
+
+```env
+POLAR_SUCCESS_URL=http://localhost:3000/dashboard?checkout=success
+
+INNGEST_EVENT_KEY=
+INNGEST_SIGNING_KEY=
+
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+
+SESSION_SECRET=
+
+POLAR_ACCESS_TOKEN=
+POLAR_PRODUCT_ID=
+
+GOOGLE_API_KEY=
+````
+
+---
+
+## 🛠 Installation & Setup
+
+Clone the repository:
+
+```bash
+git clone https://github.com/diegovilhalva/lingual-leap-ai.git
+cd lingual-leap-ai
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Start Inngest locally:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npx inngest-cli dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open the app:
 
-## Learn More
+```
+http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧠 How It Works
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Lesson Generation
 
-## Deploy on Vercel
+* Users select topic, language, and proficiency
+* Gemini generates structured lesson plans
+* Lessons are stored in Firestore
+* Inngest manages async processing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Translation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* Users submit text for translation
+* Gemini processes translations
+* Results are stored & streamed back in real-time
+
+### Monetization
+
+* Free users have limited access
+* PRO users unlock premium languages & features
+* Polar handles subscriptions and checkout
+
+---
+
+## 🧪 Example Use Cases
+
+* Language learners
+* Teachers & tutors
+* Travelers
+* Developers testing AI workflows
+* SaaS MVP demos
+
+---
+
+## 🗺 Roadmap (Planned)
+
+* ✅ More languages
+* ✅ Cloud-based Text-to-Speech fallback
+* ⏳ Speech-to-Text
+* ⏳ User progress tracking
+* ⏳ Gamification & streaks
+* ⏳ Mobile-first PWA
+* ⏳ Public API access
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome.
+For major changes, please open an issue first to discuss improvements.
+
+---
+
+## 🧑‍💻 Author
+
+**Diego Vilhalva**
+GitHub: [https://github.com/diegovilhalva](https://github.com/diegovilhalva)
+Live App: [https://lingual-leap-ai.vercel.app](https://lingual-leap-ai.vercel.app)
+
+---
+
+## ⭐ If you like this project
+
+Give it a star — it helps a lot!
